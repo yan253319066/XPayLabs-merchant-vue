@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="100%" stop-color="#4facfe" />
+    </linearGradient>
+  </defs>
+  
+  <!-- X shape -->
+  <path d="M20,10 L30,10 L37,23 L44,10 L54,10 L42,30 L54,50 L44,50 L37,37 L30,50 L20,50 L32,30 L20,10 Z" fill="url(#logoGradient)" />
+  
+  <!-- Hyphen -->
+  <rect x="50" y="28" width="15" height="4" fill="url(#logoGradient)" />
+  
+  <!-- Payment symbol (stylized P) -->
+  <path d="M70,10 L90,10 C95,10 100,15 100,20 C100,25 95,30 90,30 L80,30 L80,50 L70,50 L70,10 Z M80,20 L85,20 C87,20 90,19 90,15 C90,11 87,10 85,10 L80,10 L80,20 Z" fill="url(#logoGradient)" />
+  
+  <!-- A shape -->
+  <path d="M105,50 L115,10 L125,10 L135,50 L125,50 L123,42 L117,42 L115,50 L105,50 Z M119,34 L121,34 L120,24 L119,34 Z" fill="url(#logoGradient)" />
+  
+  <!-- Y shape -->
+  <path d="M140,10 L150,10 L155,25 L160,10 L170,10 L160,35 L160,50 L150,50 L150,35 L140,10 Z" fill="url(#logoGradient)" />
+  
+  <!-- Crypto coin symbol -->
+  <circle cx="180" cy="30" r="15" fill="none" stroke="url(#logoGradient)" stroke-width="3" />
+  <text x="180" y="35" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="url(#logoGradient)">₿</text>
+</svg>
