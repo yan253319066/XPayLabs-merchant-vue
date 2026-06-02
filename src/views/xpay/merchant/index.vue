@@ -97,7 +97,7 @@
     </el-card>
     <!-- 添加或修改商户信息对话框 -->
     <el-dialog :title="dialog.title" v-model="dialog.visible" width="500px" append-to-body>
-      <el-form ref="merchantFormRef" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="merchantFormRef" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="商户名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入商户名称" />
         </el-form-item>
@@ -110,7 +110,7 @@
         <el-form-item label="系统版本" prop="merchantSysVersion">
           <el-select v-model="form.merchantSysVersion" clearable placeholder="请选择提币方式">
             <el-option key="V3" label="V3" value="V3" />
-            <el-option key="V2" label="V2" value="V2" />
+            <!-- <el-option key="V2" label="V2" value="V2" /> -->
           </el-select>
         </el-form-item>
         <!-- <el-form-item label="提币方式" prop="withdrawalType">
@@ -123,10 +123,22 @@
           <el-input v-model="form.vip" placeholder="请输入VIP等级" />
         </el-form-item> -->
         <el-form-item label="手续费(百分比)" prop="feeRatio">
-          <el-input v-model="form.feeRatio" placeholder="请输入手续费(百分比)" />
+          <el-input v-model="form.feeRatio" placeholder="请输入手续费(百分比)" oninput="this.value = this.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1')" />
         </el-form-item>
         <el-form-item label="回调URL" prop="callbackUrl">
-          <el-input v-model="form.callbackUrl" placeholder="请输入回调URL" />
+          <el-input v-model="form.callbackUrl" placeholder="请输入回调URL" type="url" />
+        </el-form-item>
+        <el-form-item label="账户类型" prop="accountType">
+          <el-select v-model="form.accountType" clearable placeholder="请选择账户类型">
+            <el-option key="TEST" label="TEST" value="TEST" />
+            <el-option key="MAIN" label="MAIN" value="MAIN" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="生成地址类型" prop="generatedAddressType">
+          <el-select v-model="form.generatedAddressType" clearable placeholder="请选择生成地址类型">
+            <el-option key="ORDER" label="ORDER-地址重复使用" value="ORDER" />
+            <el-option key="USER" label="USER-每个用户一个地址" value="USER" />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -169,9 +181,11 @@ const initFormData: MerchantForm = {
   token: undefined,
   webhookSecret: undefined,
   vip: undefined,
-  feeRatio: undefined,
+  feeRatio: 0,
   withdrawalType: undefined,
   callbackUrl: undefined,
+  accountType: undefined,
+  generatedAddressType: undefined,
 }
 const data = reactive<PageData<MerchantForm, MerchantQuery>>({
   form: {...initFormData},
@@ -185,6 +199,8 @@ const data = reactive<PageData<MerchantForm, MerchantQuery>>({
     feeRatio: undefined,
     withdrawalType: undefined,
     callbackUrl: undefined,
+    accountType: undefined,
+    generatedAddressType: undefined,
     params: {
       createTime: undefined
     }
@@ -204,6 +220,20 @@ const data = reactive<PageData<MerchantForm, MerchantQuery>>({
     ],
     webhookSecret: [
       { required: true, message: "webhook秘钥不能为空", trigger: "blur" }
+    ],
+    feeRatio: [
+      { required: true, message: "手续费不能为空", trigger: "blur" },
+      { pattern: /^\d+(\.\d+)?$/, message: "手续费只能输入数字（含小数）", trigger: "blur" }
+    ],
+    callbackUrl: [
+      { required: true, message: "回调URL不能为空", trigger: "blur" },
+      { type: "url", message: "请输入正确的URL格式", trigger: "blur" }
+    ],
+    accountType: [
+      { required: true, message: "账户类型不能为空", trigger: "change" }
+    ],
+    generatedAddressType: [
+      { required: true, message: "生成地址类型不能为空", trigger: "change" }
     ],
     // withdrawalType: [
     //   { required: true, message: "提币类型不能为空", trigger: "change" }

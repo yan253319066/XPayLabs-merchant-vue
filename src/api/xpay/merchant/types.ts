@@ -84,6 +84,16 @@ export interface MerchantVO {
   callbackUrl: string;
 
   /**
+   * 账户类型
+   */
+  accountType: string;
+
+  /**
+   * 生成地址类型
+   */
+  generatedAddressType: string;
+
+  /**
    * 创建时间
    */
   createTime: string;
@@ -135,6 +145,16 @@ export interface MerchantForm extends BaseEntity {
    * 回调URL
    */
   callbackUrl?: string;
+
+  /**
+   * 账户类型
+   */
+  accountType?: string;
+
+  /**
+   * 生成地址类型
+   */
+  generatedAddressType?: string;
 
 }
 

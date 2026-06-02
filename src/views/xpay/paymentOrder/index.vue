@@ -137,8 +137,9 @@
             <span>{{ parseFloat(scope.row.amount).toString() }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="手续费(含矿工费)" align="center" prop="handingFee" />
+        <el-table-column label="手续费" align="center" prop="handingFee" />
         <el-table-column label="费率(%)" align="center" prop="handingRate" />
+        <el-table-column label="GAS" align="center" prop="txGas" />
         <!-- <el-table-column label="过期时间" align="center" prop="expiredTime" width="180">
           <template #default="scope">
             <span>{{ parseTime(scope.row.expiredTime) }}</span>
@@ -155,7 +156,6 @@
           </template>
         </el-table-column>
         <el-table-column label="失败原因" align="center" prop="reason" />
-        <!-- <el-table-column label="GAS" align="center" prop="txGas" /> -->
         <!-- <el-table-column label="回调状态" align="center" prop="notifyStatus" />
         <el-table-column label="回调URL" align="center" prop="callbackUrl" />
         <el-table-column label="回调时间" align="center" prop="notifyTime" width="180">

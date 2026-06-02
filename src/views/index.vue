@@ -216,7 +216,8 @@
               </el-descriptions-item>
             </el-descriptions>
             <div class="api-doc-link">
-              <el-link type="primary" href="https://vtqvpkz5zj.apifox.cn" target="_blank">
+              <!-- <el-link type="primary" href="https://vtqvpkz5zj.apifox.cn" target="_blank"> -->
+              <el-link type="primary" href="https://docs.xpaylabs.com" target="_blank">
                 <el-icon>
                   <Document />
                 </el-icon> API接入文档
