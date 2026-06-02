@@ -55,16 +55,17 @@ const sideTheme = computed(() => settingsStore.sideTheme);
   height: 50px;
   line-height: 50px;
   background: #2b2f3a;
-  text-align: center;
+  text-align: left;
   overflow: hidden;
+  padding: 0 12px;
 
   & .sidebar-logo-link {
     height: 100%;
     width: 100%;
 
     & .sidebar-logo {
-      width: 80px;
-      height: 80px;
+      width: 50px;
+      height: 50px;
       vertical-align: middle;
       margin-right: 12px;
     }
@@ -87,6 +88,9 @@ const sideTheme = computed(() => settingsStore.sideTheme);
   }
 
   &.collapse {
+    text-align: center;
+    padding: 0;
+
     .sidebar-logo {
       margin-right: 0px;
     }
