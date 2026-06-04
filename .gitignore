@@ -34,3 +34,5 @@ components.d.ts
 .env.*.local
 .env.production
 !.env.example
+
+AGENTS.md
