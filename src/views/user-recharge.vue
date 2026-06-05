@@ -73,7 +73,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { CopyDocument } from '@element-plus/icons-vue';
 import QrcodeVue from 'qrcode.vue';
-import { XPay } from 'x-pay-sdk-official';
+import { XPay } from '@xpaylabs/node-sdk';
 import { merchantApiKey, testUserRecharge, testUserGetOrderStatus } from '@/api/xpay/merchant';
 
 export default {

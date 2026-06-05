@@ -449,7 +449,7 @@
                     <ol class="binding-steps-list">
                       <li>访问 <el-link href="https://feee.io/" target="_blank" type="primary">https://feee.io/</el-link> 注册账户</li>
                       <li>在平台充值TRX用于能量租赁</li>
-                      <li>在平台创建API密钥，UA白名单中添加 <code>x-pay</code> <el-tag type="danger" size="small">⚠️ 必须配置</el-tag></li>
+                      <li>在平台创建API密钥，UA白名单中添加 <code>xpay</code> <el-tag type="danger" size="small">⚠️ 必须配置</el-tag></li>
                       <li>在下方输入API密钥和谷歌验证码完成绑定</li>
                     </ol>
                   </template>
