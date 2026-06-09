@@ -29,7 +29,7 @@ export interface Google2fa {
   secretKey: string;
   qrCodeUrl: string;
 }
-export interface Verify2faForm  {
+export interface Verify2faForm {
   code: number;
 }
 
@@ -98,6 +98,10 @@ export interface MerchantVO {
    */
   createTime: string;
 
+  /**
+   * 谷歌2FA绑定状态
+   */
+  googleStatus: string;
 }
 
 export interface MerchantForm extends BaseEntity {
@@ -155,11 +159,9 @@ export interface MerchantForm extends BaseEntity {
    * 生成地址类型
    */
   generatedAddressType?: string;
-
 }
 
 export interface MerchantQuery extends PageQuery {
-
   /**
    * 商户名称
    */
@@ -200,11 +202,8 @@ export interface MerchantQuery extends PageQuery {
    */
   createTime?: string;
 
-    /**
-     * 日期范围参数
-     */
-    params?: any;
+  /**
+   * 日期范围参数
+   */
+  params?: any;
 }
-
-
-

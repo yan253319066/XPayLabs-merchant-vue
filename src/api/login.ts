@@ -93,6 +93,14 @@ export function callback(data: LoginData): AxiosPromise<any> {
   });
 }
 
+export function verify2faLogin(data: { code: number }): AxiosPromise<any> {
+  return request({
+    url: '/auth/login/2fa/verify',
+    method: 'post',
+    data
+  });
+}
+
 // 获取用户详细信息
 export function getInfo(): AxiosPromise<UserInfo> {
   return request({

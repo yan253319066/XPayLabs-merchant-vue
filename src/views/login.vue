@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
+    <el-form v-if="!showTwoFactor" ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
       <div class="title-box">
         <h3 class="title">{{ title }}</h3>
         <lang-select />
@@ -44,23 +44,6 @@
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin: 0 0 25px 0">{{ proxy.$t('login.rememberPassword') }}</el-checkbox>
-      <!-- <el-form-item style="float: right">
-        <el-button circle :title="proxy.$t('login.social.wechat')" @click="doSocialLogin('wechat')">
-          <svg-icon icon-class="wechat" />
-        </el-button>
-        <el-button circle :title="proxy.$t('login.social.maxkey')" @click="doSocialLogin('maxkey')">
-          <svg-icon icon-class="maxkey" />
-        </el-button>
-        <el-button circle :title="proxy.$t('login.social.topiam')" @click="doSocialLogin('topiam')">
-          <svg-icon icon-class="topiam" />
-        </el-button>
-        <el-button circle :title="proxy.$t('login.social.gitee')" @click="doSocialLogin('gitee')">
-          <svg-icon icon-class="gitee" />
-        </el-button>
-        <el-button circle :title="proxy.$t('login.social.github')" @click="doSocialLogin('github')">
-          <svg-icon icon-class="github" />
-        </el-button>
-      </el-form-item> -->
       <el-form-item style="width: 100%">
         <el-button :loading="loading" size="large" type="primary" style="width: 100%" @click.prevent="handleLogin">
           <span v-if="!loading">{{ proxy.$t('login.login') }}</span>
@@ -71,7 +54,23 @@
         </div>
       </el-form-item>
     </el-form>
-    <!--  底部  -->
+    <el-form v-else ref="twoFactorRef" :model="twoFactorForm" :rules="twoFactorRules" class="login-form">
+      <div class="title-box">
+        <h3 class="title">谷歌身份验证</h3>
+        <lang-select />
+      </div>
+      <p style="margin: 0 0 20px; color: #666; font-size: 14px">请在下方输入谷歌身份验证器中的 6 位验证码</p>
+      <el-form-item prop="code">
+        <el-input v-model="twoFactorForm.code" size="large" placeholder="请输入验证码" maxlength="6" @keyup.enter="handleTwoFactorVerify">
+          <template #prefix><svg-icon icon-class="password" class="el-input__icon input-icon" /></template>
+        </el-input>
+      </el-form-item>
+      <el-form-item style="width: 100%">
+        <el-button :loading="twoFactorLoading" size="large" type="primary" style="width: 100%" @click.prevent="handleTwoFactorVerify">
+          <span>{{ proxy.$t('login.login') }}</span>
+        </el-button>
+      </el-form-item>
+    </el-form>
     <div class="el-login-footer">
       <span>Copyright © 2025 Yan All Rights Reserved.</span>
     </div>
@@ -79,12 +78,11 @@
 </template>
 
 <script setup lang="ts">
-import { getCodeImg, getTenantList } from '@/api/login';
-import { authBinding } from '@/api/system/social/auth';
+import { getCodeImg, getTenantList, verify2faLogin } from '@/api/login';
+import { merchantInfo } from '@/api/xpay/merchant';
 import { useUserStore } from '@/store/modules/user';
 import { LoginData, TenantVO } from '@/api/types';
 import { to } from 'await-to-js';
-import { HttpStatus } from '@/enums/RespEnum';
 import { useI18n } from 'vue-i18n';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
@@ -121,8 +119,18 @@ const tenantEnabled = ref(true);
 const register = ref(false);
 const redirect = ref('/');
 const loginRef = ref<ElFormInstance>();
-// 租户列表
 const tenantList = ref<TenantVO[]>([]);
+
+const showTwoFactor = ref(false);
+const twoFactorLoading = ref(false);
+const twoFactorRef = ref<ElFormInstance>();
+const twoFactorForm = ref({ code: '' });
+const twoFactorRules: ElFormRules = {
+  code: [
+    { required: true, trigger: 'blur', message: '请输入谷歌验证码' },
+    { len: 6, trigger: 'blur', message: '验证码为 6 位数字' }
+  ]
+};
 
 watch(
   () => router.currentRoute.value,
@@ -152,9 +160,14 @@ const handleLogin = () => {
       // 调用action的登录方法
       const [err] = await to(userStore.login(loginForm.value));
       if (!err) {
+        const [merchantErr, merchantRes]: any = await to(merchantInfo());
+        if (!merchantErr && merchantRes?.data?.googleStatus === 'BOUND') {
+          showTwoFactor.value = true;
+          loading.value = false;
+          return;
+        }
         const redirectUrl = redirect.value || '/';
         await router.push(redirectUrl);
-        loading.value = false;
       } else {
         loading.value = false;
         // 重新获取验证码
@@ -168,9 +181,19 @@ const handleLogin = () => {
   });
 };
 
-/**
- * 获取验证码
- */
+const handleTwoFactorVerify = async () => {
+  twoFactorRef.value?.validate(async (valid: boolean) => {
+    if (!valid) return;
+    twoFactorLoading.value = true;
+    const [err] = await to(verify2faLogin({ code: Number(twoFactorForm.value.code) }));
+    if (!err) {
+      const redirectUrl = redirect.value || '/';
+      await router.push(redirectUrl);
+    }
+    twoFactorLoading.value = false;
+  });
+};
+
 const getCode = async () => {
   const res = await getCodeImg();
   const { data } = res;
@@ -194,9 +217,6 @@ const getLoginData = () => {
   } as LoginData;
 };
 
-/**
- * 获取租户列表
- */
 const initTenantList = async () => {
   const { data } = await getTenantList(false);
   tenantEnabled.value = data.tenantEnabled === undefined ? true : data.tenantEnabled;
@@ -206,21 +226,6 @@ const initTenantList = async () => {
       loginForm.value.tenantId = tenantList.value[0].tenantId;
     }
   }
-};
-
-/**
- * 第三方登录
- * @param type
- */
-const doSocialLogin = (type: string) => {
-  authBinding(type, loginForm.value.tenantId).then((res: any) => {
-    if (res.code === HttpStatus.SUCCESS) {
-      // 获取授权地址跳转
-      window.location.href = res.data;
-    } else {
-      ElMessage.error(res.msg);
-    }
-  });
 };
 
 onMounted(() => {
