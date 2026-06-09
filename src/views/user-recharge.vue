@@ -73,8 +73,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { CopyDocument } from '@element-plus/icons-vue';
 import QrcodeVue from 'qrcode.vue';
-import { XPay } from '@xpaylabs/node-sdk';
-import { merchantApiKey, testUserRecharge, testUserGetOrderStatus } from '@/api/xpay/merchant';
+import { testUserRecharge, testUserGetOrderStatus } from '@/api/xpay/merchant';
 
 export default {
   components: {
@@ -99,9 +98,6 @@ export default {
     let statusCheckInterval = null;
     let countdownInterval = null;
 
-    // XPay SDK实例
-    const xpayInstance = ref(null);
-
     onMounted(async () => {
       // 从URL查询参数中获取数据
       currency.value = route.query.currency || 'USDT';
@@ -110,9 +106,6 @@ export default {
       uid.value = route.query.uid || '';
       // 检查是否是测试网
       isTestnet.value = route.query.network === 'TEST';
-
-      // 初始化XPay SDK实例
-      //   await initXPayInstance();
 
       // 检查本地存储中是否有未完成的订单
       const savedOrderData = localStorage.getItem(`recharge_order_${uid.value}_${currency.value}_${chain.value}_${amount.value}`);
@@ -174,48 +167,12 @@ export default {
       }
     });
 
-    // 初始化XPay SDK实例
-    const initXPayInstance = async () => {
-      try {
-        const xpayBaseUrl = import.meta.env.VITE_XPAY_BASE_URL;
-        const res = await merchantApiKey();
-        const { apiKey, webhookSecret } = res.data;
-
-        xpayInstance.value = new XPay({
-          apiKey,
-          apiSecret: webhookSecret,
-          baseUrl: xpayBaseUrl
-        });
-
-        return true;
-      } catch (err) {
-        console.error('初始化XPay SDK失败:', err);
-        ElMessage({
-          message: '初始化支付SDK失败，请刷新页面重试',
-          type: 'error'
-        });
-        return false;
-      }
-    };
-
     const generateOrderId = () => {
       return `test-payin-${Date.now()}`;
     }
 
     const createCollectionOrder = async () => {
       try {
-        // if (!xpayInstance.value) {
-        //   await initXPayInstance();
-        //   if (!xpayInstance.value) return;
-        // }
-
-        // const response = await xpayInstance.value.createCollection({
-        //   amount: amount.value,
-        //   symbol: currency.value,
-        //   chain: chain.value,
-        //   uid: uid.value || 'test-user',
-        //   orderId: generateOrderId()
-        // });
 
         const response = await testUserRecharge({
           amount: amount.value,
@@ -349,12 +306,7 @@ export default {
 
     const getOrderStatus = async (orderId) => {
       try {
-        // if (!xpayInstance.value) {
-        //   await initXPayInstance();
-        //   if (!xpayInstance.value) return;
-        // }
 
-        // const response = await xpayInstance.value.getOrderStatus(orderId);
         const response = await testUserGetOrderStatus(orderId);
         console.log('Get order status:', response);
 
