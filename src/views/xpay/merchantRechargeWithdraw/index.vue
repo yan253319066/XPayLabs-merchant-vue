@@ -88,7 +88,7 @@
         <!-- <el-table-column label="主键ID" align="center" prop="id" v-if="true" /> -->
         <!-- <el-table-column label="txId" align="center" prop="txId" /> -->
         <!-- <el-table-column label="商家ID" align="center" prop="merchantId" /> -->
-        <el-table-column label="订单号" align="center" prop="transactionNo" />
+        <el-table-column label="订单号" align="center" prop="transactionNo" width="180" />
         <el-table-column label="类型" align="center" prop="type" >
           <template #default="scope">
             <el-tag v-if="scope.row.type === 'RECHARGE'" type="success">充值</el-tag>

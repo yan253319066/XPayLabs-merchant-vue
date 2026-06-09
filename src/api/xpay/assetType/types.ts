@@ -30,6 +30,11 @@ export interface AssetTypeVO {
   network: string;
 
   /**
+   * 热钱包地址
+   */
+  hotAddress: string;
+
+  /**
    * 冷钱包地址
    */
   coldAddress: string;
@@ -48,7 +53,6 @@ export interface AssetTypeVO {
    * 是否启用
    */
   enabled: string;
-
 }
 
 export interface AssetTypeForm extends BaseEntity {
@@ -83,6 +87,11 @@ export interface AssetTypeForm extends BaseEntity {
   network?: string;
 
   /**
+   * 热钱包地址
+   */
+  hotAddress?: string;
+
+  /**
    * 冷钱包地址
    */
   coldAddress?: string;
@@ -101,11 +110,9 @@ export interface AssetTypeForm extends BaseEntity {
    * 是否启用
    */
   enabled?: string;
-
 }
 
 export interface AssetTypeQuery extends PageQuery {
-
   /**
    * 链
    */
@@ -132,6 +139,11 @@ export interface AssetTypeQuery extends PageQuery {
   network?: string;
 
   /**
+   * 热钱包地址
+   */
+  hotAddress?: string;
+
+  /**
    * 冷钱包地址
    */
   coldAddress?: string;
@@ -151,11 +163,8 @@ export interface AssetTypeQuery extends PageQuery {
    */
   enabled?: string;
 
-    /**
-     * 日期范围参数
-     */
-    params?: any;
+  /**
+   * 日期范围参数
+   */
+  params?: any;
 }
-
-
-
