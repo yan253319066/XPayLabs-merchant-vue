@@ -105,9 +105,9 @@
           <el-input v-model="form.network" placeholder="请输入网络" />
         </el-form-item>
         <el-form-item label="热钱包地址" prop="hotAddress">
-          <div class="flex items-center gap-1 w-full">
+          <div class="flex flex-col w-full gap-1">
             <el-input v-model="form.hotAddress" type="textarea" placeholder="请输入热钱包地址" disabled />
-            <span class="text-gray-400 text-xs whitespace-nowrap">热钱包地址由系统生成不能修改</span>
+            <span class="text-gray-400 text-xs">热钱包地址由系统生成不能修改</span>
           </div>
         </el-form-item>
         <el-form-item label="冷钱包地址" prop="coldAddress">
