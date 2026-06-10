@@ -4,6 +4,7 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN echo "VITE_APP_ENV=production" > .env.production && \
+    echo "VITE_APP_TITLE=XPayLabs" >> .env.production && \
     echo "VITE_APP_BASE_API=/prod-api" >> .env.production && \
     echo "VITE_APP_ENCRYPT=true" >> .env.production && \
     echo "VITE_APP_RSA_PUBLIC_KEY=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKoR8mX0rGKLqzcWmOzbfj64K8ZIgOdHnzkXSOVOZbFu/TJhZ7rFAN+eaGkl3C4buccQd/EjEsj9ir7ijT7h96MCAwEAAQ==" >> .env.production && \
