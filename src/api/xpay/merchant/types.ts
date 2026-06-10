@@ -18,6 +18,7 @@ export interface updateColdAddressForm {
 export interface WithdrawalForm {
   chain: string;
   symbol: string;
+  address: string;
   amount: number;
   code: number;
 }

@@ -112,7 +112,7 @@
           </template>
         </el-table-column>
         <!-- <el-table-column label="GAS费" align="center" prop="txGas" /> -->
-        <el-table-column label="手续费(含矿工费)" align="center" prop="fee" />
+        <el-table-column label="手续费" align="center" prop="fee" />
         <el-table-column label="费率(%)" align="center" prop="rate" />
         <el-table-column label="创建时间" align="center" prop="createTime" width="180">
           <template #default="scope">

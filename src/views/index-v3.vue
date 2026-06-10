@@ -283,17 +283,17 @@
               :label="chain.label" :value="chain.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="提现地址">
-          <el-input :value="getWithdrawAddress()" readonly>
+        <el-form-item label="提现地址" prop="address">
+          <el-input v-model="withdrawForm.address" placeholder="默认使用冷钱包地址，可修改">
             <template #append>
-              <el-button @click="copyText(getWithdrawAddress())">
+              <el-button @click="copyText(withdrawForm.address)">
                 <el-icon>
                   <CopyDocument />
                 </el-icon>
               </el-button>
             </template>
           </el-input>
-          <div class="form-tip">提现地址为对应链的冷钱包地址</div>
+          <div class="form-tip">默认使用对应链的冷钱包地址，可自行修改</div>
         </el-form-item>
         <el-form-item label="提现数量" prop="amount">
           <el-input-number v-model="withdrawForm.amount" :min="getMinWithdrawAmount()"
@@ -724,6 +724,7 @@ export default {
     const withdrawRules = {
       currency: [{ required: true, message: '请选择币种', trigger: 'change' }],
       chain: [{ required: true, message: '请选择链', trigger: 'change' }],
+      address: [{ required: true, message: '请输入提现地址', trigger: 'blur' }],
       amount: [
         { required: true, message: '请输入提现数量', trigger: 'blur' },
         {
@@ -933,6 +934,8 @@ export default {
           withdrawForm.chain = chains[0].value;
         }
       }
+      // 默认填充冷钱包地址
+      withdrawForm.address = getWithdrawAddress();
       withdrawDialogVisible.value = true;
       // 计算初始最大可提现金额
       calculateMaxWithdrawAmount();
@@ -949,6 +952,14 @@ export default {
         if (chains.length > 0) {
           withdrawForm.chain = chains[0].value;
         }
+      }
+    );
+
+    // 监听链变化，自动更新提现地址默认值
+    watch(
+      () => withdrawForm.chain,
+      () => {
+        withdrawForm.address = getWithdrawAddress();
       }
     );
 
@@ -1301,17 +1312,8 @@ export default {
 
       withdrawFormRef.value.validate(async (valid) => {
         if (valid) {
-          const withdrawAddress = getWithdrawAddress();
-          if (!withdrawAddress) {
-            ElMessage({
-              message: `请先设置提现地址`,
-              type: 'error'
-            });
-            return;
-          }
-
           ElMessageBox.confirm(
-            `确认提现 ${withdrawForm.amount} ${withdrawForm.currency} 到地址 ${withdrawAddress}?`,
+            `确认提现 ${withdrawForm.amount} ${withdrawForm.currency} 到地址 ${withdrawForm.address}?`,
             '提现确认',
             {
               confirmButtonText: '确认',
@@ -1319,7 +1321,7 @@ export default {
               type: 'warning',
             }
           ).then(async () => {
-            const res = await withdrawal({ chain: withdrawForm.chain, address: withdrawAddress, amount: withdrawForm.amount, symbol: withdrawForm.currency, code: withdrawForm.googleCode });
+            const res = await withdrawal({ chain: withdrawForm.chain, address: withdrawForm.address, amount: withdrawForm.amount, symbol: withdrawForm.currency, code: withdrawForm.googleCode });
             if (res && res.code === 200) {
               ElMessage({
                 message: '提现申请已提交，请等待处理',
