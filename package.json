@@ -2,8 +2,9 @@
   "$schema": "https://json.schemastore.org/package",
   "name": "xpay-merchant",
   "version": "5.4.0-2.4.0",
-  "description": "后台管理系统",
-  "author": "Yan",
+  "description": "XPay Labs — Merchant admin dashboard (Vue 3 + Element Plus) for order management, payout, and settlement.",
+  "author": "XPay Labs",
+  "keywords": ["xpaylabs", "xpay", "merchant", "admin", "crypto-payment", "vue3", "element-plus"],
   "license": "MIT",
   "type": "module",
   "scripts": {
