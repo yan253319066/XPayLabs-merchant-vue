@@ -59,4 +59,4 @@ npm run prettier         # Prettier format
 
 ## License
 
-MIT
+GPLv3
