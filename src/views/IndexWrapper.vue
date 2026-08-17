@@ -13,7 +13,6 @@ const currentComponent = shallowRef();
 // 异步加载组件
 const IndexV3 = defineAsyncComponent(() => import('@/views/index-v3.vue'));
 const IndexV2 = defineAsyncComponent(() => import('@/views/index-v2.vue'));
-const Index = defineAsyncComponent(() => import('@/views/index.vue'));
 
 onMounted(async () => {
   try {
@@ -21,7 +20,7 @@ onMounted(async () => {
 
     // 检查用户是否是superadmin
     if (userStore.roles.includes('superadmin')) {
-      currentComponent.value = Index;
+      currentComponent.value = IndexV3;
       return;
     }
     
