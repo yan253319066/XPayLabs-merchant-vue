@@ -59,4 +59,4 @@ npm run prettier         # Prettier 格式化
 
 ## License
 
-GPLv3
+[GPL-3.0](LICENSE)
