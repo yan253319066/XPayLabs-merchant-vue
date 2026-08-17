@@ -43,7 +43,7 @@
               </div>
               <div>
                 <div class="stat-sub">成功金额</div>
-                <div class="stat-value amount">{{ trade.collection.successAmount ?? 0 }}</div>
+                <div class="stat-value amount">{{ formatAmount(trade.collection.successAmount) }}</div>
               </div>
               <div>
                 <div class="stat-sub">成功率</div>
@@ -66,7 +66,7 @@
               </div>
               <div>
                 <div class="stat-sub">成功金额</div>
-                <div class="stat-value amount">{{ trade.payout.successAmount ?? 0 }}</div>
+                <div class="stat-value amount">{{ formatAmount(trade.payout.successAmount) }}</div>
               </div>
               <div>
                 <div class="stat-sub">成功率</div>
@@ -84,7 +84,9 @@
             <template #default="{ row }">{{ orderTypeLabel(row.orderType) }}</template>
           </el-table-column>
           <el-table-column prop="successCount" label="成功笔数" min-width="110" />
-          <el-table-column prop="successAmount" label="成功金额" min-width="140" />
+          <el-table-column label="成功金额" min-width="140">
+            <template #default="{ row }">{{ formatAmount(row.successAmount) }}</template>
+          </el-table-column>
         </el-table>
       </el-card>
 
@@ -101,7 +103,7 @@
               </div>
               <div>
                 <div class="stat-sub">成功金额</div>
-                <div class="stat-value amount">{{ fund.recharge.successAmount ?? 0 }}</div>
+                <div class="stat-value amount">{{ formatAmount(fund.recharge.successAmount) }}</div>
               </div>
             </div>
           </el-card>
@@ -116,7 +118,7 @@
               </div>
               <div>
                 <div class="stat-sub">成功金额</div>
-                <div class="stat-value amount">{{ fund.withdraw.successAmount ?? 0 }}</div>
+                <div class="stat-value amount">{{ formatAmount(fund.withdraw.successAmount) }}</div>
               </div>
             </div>
           </el-card>
@@ -124,7 +126,7 @@
         <el-col :xs="24" :sm="12" :md="8">
           <el-card shadow="hover" class="stat-card">
             <div class="stat-label">手续费合计</div>
-            <div class="stat-value amount">{{ fund.feeTotal ?? 0 }}</div>
+            <div class="stat-value amount">{{ formatAmount(fund.feeTotal) }}</div>
           </el-card>
         </el-col>
       </el-row>
@@ -136,7 +138,9 @@
             <template #default="{ row }">{{ orderTypeLabel(row.orderType) }}</template>
           </el-table-column>
           <el-table-column prop="successCount" label="成功笔数" min-width="110" />
-          <el-table-column prop="successAmount" label="成功金额" min-width="140" />
+          <el-table-column label="成功金额" min-width="140">
+            <template #default="{ row }">{{ formatAmount(row.successAmount) }}</template>
+          </el-table-column>
         </el-table>
       </el-card>
 
@@ -275,6 +279,18 @@ const health = computed(
 );
 
 const staleTrackers = computed(() => (props.isAdmin ? (health.value.staleTrackers ?? []) : []));
+
+/** 避免 BigDecimal 科学计数法（如 0E-8）直接展示 */
+const formatAmount = (v: number | string | null | undefined) => {
+  if (v === null || v === undefined || v === '') return '0';
+  const s = String(v).trim();
+  if (/e/i.test(s)) {
+    const n = Number(s);
+    if (!Number.isFinite(n)) return '0';
+    return n === 0 ? '0' : n.toLocaleString('en-US', { maximumFractionDigits: 18, useGrouping: false });
+  }
+  return s;
+};
 
 const orderTypeLabel = (type?: string) => {
   const map: Record<string, string> = {

@@ -29,7 +29,7 @@
         <el-col :xs="24" :sm="12" :md="8" :lg="4">
           <el-card shadow="hover" class="stat-card">
             <div class="stat-label">今日代收金额</div>
-            <div class="stat-value amount">{{ overview.todayCollectionAmount ?? 0 }}</div>
+            <div class="stat-value amount">{{ formatAmount(overview.todayCollectionAmount) }}</div>
           </el-card>
         </el-col>
         <el-col :xs="24" :sm="12" :md="8" :lg="4">
@@ -41,7 +41,7 @@
         <el-col :xs="24" :sm="12" :md="8" :lg="4">
           <el-card shadow="hover" class="stat-card">
             <div class="stat-label">今日代付金额</div>
-            <div class="stat-value amount">{{ overview.todayPayoutAmount ?? 0 }}</div>
+            <div class="stat-value amount">{{ formatAmount(overview.todayPayoutAmount) }}</div>
           </el-card>
         </el-col>
       </el-row>
@@ -118,6 +118,18 @@ const loading = ref(false);
 const loadError = ref(false);
 const errorMsg = ref('加载平台概览失败');
 const overview = ref<DashboardAdminOverviewVO | null>(null);
+
+/** 避免 BigDecimal 科学计数法（如 0E-8）直接展示 */
+const formatAmount = (v: number | string | null | undefined) => {
+  if (v === null || v === undefined || v === '') return '0';
+  const s = String(v).trim();
+  if (/e/i.test(s)) {
+    const n = Number(s);
+    if (!Number.isFinite(n)) return '0';
+    return n === 0 ? '0' : n.toLocaleString('en-US', { maximumFractionDigits: 18, useGrouping: false });
+  }
+  return s;
+};
 
 const staleTrackers = computed(() => overview.value?.staleTrackers ?? []);
 
