@@ -122,7 +122,7 @@
         <el-table-column label="失败原因" align="center" prop="reason" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.status === 'INIT'" content="审核" placement="top">
+            <el-tooltip v-if="scope.row.type === 'WITHDRAW' && scope.row.status === 'INIT'" content="审核" placement="top">
               <el-button link type="primary" icon="Edit" @click="handleApproval(scope.row)" v-hasPermi="['xpay:merchantRechargeWithdraw:approve']"></el-button>
             </el-tooltip>
             <!-- <el-tooltip content="修改" placement="top">
