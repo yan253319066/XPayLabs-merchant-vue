@@ -125,8 +125,8 @@ const fetchOverview = async () => {
   loading.value = true;
   loadError.value = false;
   try {
-    const res = await getAdminOverview();
-    overview.value = (res as any).data ?? res;
+    const { data } = await getAdminOverview();
+    overview.value = data ?? null;
   } catch (e: any) {
     loadError.value = true;
     overview.value = null;
