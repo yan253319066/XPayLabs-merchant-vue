@@ -59,4 +59,6 @@ npm run prettier         # Prettier 格式化
 
 ## License
 
-[GPL-3.0](LICENSE)
+Copyright (C) 2026 XPay Labs
+
+本程序为自由软件，遵循 [GNU General Public License v3.0](LICENSE)。
